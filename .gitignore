@@ -1,0 +1,19 @@
+# Training files
+saved_models
+lightning_logs
+*.tfevents
+train_logs
+wandb
+
+# Pycharm files
+__pycache__/
+.idea/
+neural_network_utils/__pycache__/
+oasis_utils/__pycache__/
+
+# Linux compute server files (vim temp files etc)
+*.out.swp
+*.pyc.swp
+.gitignore.swp
+*.swp 
+*.pyc
