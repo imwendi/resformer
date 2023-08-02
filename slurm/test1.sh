@@ -11,7 +11,7 @@ export PYTHONPATH="/scratch/itee/uqwma4/resformer"
 echo $PYTHONPATH
 
 python -m torch.distributed.launch \
-    --nproc_per_node 2 \
+    --nproc_per_node 2 \                    # number of GPUs
     ../image_classification/main.py \
     --data-path "/scratch/itee/uqwma4/data/imagenet" \
     --model resformer_small_patch16 \
@@ -23,19 +23,3 @@ python -m torch.distributed.launch \
     --distillation-type 'smooth-l1' \
     --distillation-target cls \
     --sep-aug
-
-# --data-path  "D:\Projects\SFCViT\data\imagenet"  --model resformer_small_patch16  --output_dir "output" --batch-size 128 --pin-mem --input-size 224 160 128 --auto-resume  --distillation-type 'smooth-l1' --distillation-target cls --sep-aug
-
-#python -m torch.distributed.launch \
-#    --nproc_per_node 8 \
-#    ../image_classification/main.py \
-#    --data-path YOUR_DATA_PATH \
-#    --model resformer_small_patch16 \
-#    --output_dir YOUR_OUTPUT_PATH \
-#    --batch-size 128 \
-#    --pin-mem \
-#    --input-size 224 160 128 \
-#    --auto-resume \
-#    --distillation-type 'smooth-l1' \
-#    --distillation-target cls \
-#    --sep-aug

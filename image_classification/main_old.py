@@ -22,7 +22,6 @@ from losses import DistillationLoss
 import models
 import utils
 
-import wandb
 
 def get_args_parser():
     parser = argparse.ArgumentParser('DeiT training and evaluation script', add_help=False)
@@ -175,50 +174,11 @@ def get_args_parser():
                         help='number of distributed processes')
     parser.add_argument('--local_rank', type=int)
     parser.add_argument('--dist_url', default='env://', help='url used to set up distributed training')
-
-    # WandB parameters
-    parser.add_argument('--wandb', action='store_true', help='Enable to sync tensorboard logs to wandb')
-    parser.add_argument('--wandb-name', default='./resformer', type=str, help='Base wandb run name, date/time will be appended')
-    parser.add_argument('--wandb-project', default='./resformer', type=str, help='wandb project name')
-    parser.add_argument('--wandb-entity', default='./imwendi', type=str, help='wandb entity name')
-    parser.add_argument('--wandb-outdir', default='./wandb', type=str, help='wandb output directory, overrides --output_dir and --writer_path and puts them as subfolders under this')
-
     return parser
 
 
 def main(args):
     print(args)
-
-    # setup wandb
-    if args.wandb:
-        name, project, entity, wandb_outdir = args.wandb_name, args.wandb_project, args.wandb_entity, args.wandb_outdir
-
-        current_time = datetime.datetime.now().strftime("%Y-%m-%d %H_%M_%S")
-        name = f"{name}_{current_time}"
-
-        # create outdir if not exists
-        if not os.path.exists(wandb_outdir):
-            os.makedirs(wandb_outdir)
-
-        # create subdirectory for this project
-        project_dir = os.path.join(wandb_outdir, project)
-        if not os.path.exists(project_dir):
-            os.makedirs(project_dir)
-
-        # create subdirectory for this run and set as output_dir and writer_path
-        run_dir = os.path.join(project_dir, name)
-        os.makedirs(run_dir)
-        args.output_dir = os.path.join(run_dir, 'output')
-        args.writer_path = run_dir
-
-        print(f"Logging to wandb, entity: {entity}, project: {project}, name: {name}")
-        wandb.init(project=project,
-                   name=name,
-                   entity=entity,
-                   sync_tensorboard=True,
-                   dir=run_dir)
-        wandb.config.update(args)
-
     utils.build_ddp(args)
     device = torch.device(args.device)
 
@@ -311,14 +271,13 @@ def main(args):
     elif args.smoothing:
         criterion = LabelSmoothingCrossEntropy(smoothing=args.smoothing)
     else:
-        criterion = torch.nn.CrossEntropyLoss()
+        criterion = torch.nn.CrossEntrtraopyLoss()
 
     criterion = DistillationLoss(
         criterion, args.distillation_type, args.distillation_alpha, args.distillation_tau
     )
 
     output_dir = Path(args.output_dir)
-    print('output_dir:', output_dir)
     
     if args.auto_resume:
         if args.resume == '':
