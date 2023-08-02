@@ -16,8 +16,8 @@ import torch.backends.cudnn as cudnn
 
 import torch
 import torch.distributed as dist
-# from torch.utils.tensorboard import SummaryWrite
-from tensorboardX import SummaryWriter
+from torch.utils.tensorboard import SummaryWriter
+#from tensorboardX import SummaryWriter
 import math
 from torch._six import inf
 
